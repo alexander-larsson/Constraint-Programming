@@ -21,27 +21,26 @@ public class PopsicleStand {
 		IntVar costVar = new IntVar(store, "Cost",0,10000);
 
 		//All variables in an array to send in to the search
-		IntVar[] allVars = new IntVar[21];
+		IntVar[] allVars = new IntVar[14];
 		
 		//Defines the number of workers that starts working part-time on each day
 		IntVar[] startsPartTime = new IntVar[7];
 		for(int i = 0; i < 7; i++){
-			startsPartTime[i] = new IntVar(store, "start-part-time-" + days[i], 0, 25);
+			startsPartTime[i] = new IntVar(store, "start-part-time-" + days[i], 0, 20);
 			allVars[i] = startsPartTime[i];
 		}
 		
 		//Defines the number of workers that starts working full-time on each day
 		IntVar[] startsFullTime = new IntVar[7];
 		for(int i = 0; i < 7; i++){
-			startsFullTime[i] = new IntVar(store, "start-full-time-" + days[i], 0, 25);
+			startsFullTime[i] = new IntVar(store, "start-full-time-" + days[i], 0, 20);
 			allVars[7+i] = startsFullTime[i];
 		}
 		
 		//Defines the number of workers that is  required to work each day
 		IntVar[] reqEmpl = new IntVar[7];
 		for(int i = 0; i < 7; i++){
-			reqEmpl[i] = new IntVar(store, "required-" + days[i], requiredEmployees[i], 25);
-			allVars[14+i] = reqEmpl[i];
+			reqEmpl[i] = new IntVar(store, "required-" + days[i], requiredEmployees[i], 20);
 		}
 		
 		
