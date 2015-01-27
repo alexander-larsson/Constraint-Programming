@@ -23,32 +23,32 @@ public class PopsicleStand {
 		//Defines the number of workers that starts working part-time on each day
 		IntVar[] startsPartTime = new IntVar[7];
 		for(int i = 0; i < 7; i++){
-			startsPartTime[i] = new IntVar(store, "start-part-time-" + days[i], 0, requiredEmployees[i]);
+			startsPartTime[i] = new IntVar(store, "start-part-time-" + days[i], 0, 25);
 		}
 		
 		//Defines the number of workers that starts working full-time on each day
 		IntVar[] startsFullTime = new IntVar[7];
 		for(int i = 0; i < 7; i++){
-			startsFullTime[i] = new IntVar(store, "start-full-time-" + days[i], 0, requiredEmployees[i]);
+			startsFullTime[i] = new IntVar(store, "start-full-time-" + days[i], 0, 25);
 		}
 		
 		
 		//Defines the number of workers that is working part-time on each day
 		IntVar[] worksPartTime = new IntVar[7];
 		for(int i = 0; i < 7; i++){
-			worksPartTime[i] = new IntVar(store, "work-part-time-" + days[i], 0, requiredEmployees[i]);
+			worksPartTime[i] = new IntVar(store, "work-part-time-" + days[i], 0, 25);
 		}
 		
 		//Defines the number of workers that is working full-time on each day
 		IntVar[] worksFullTime = new IntVar[7];
 		for(int i = 0; i < 7; i++){
-			worksFullTime[i] = new IntVar(store, "work-part-time-" + days[i], 0, requiredEmployees[i]);
+			worksFullTime[i] = new IntVar(store, "work-part-time-" + days[i], 0, 25);
 		}
 		
 		//Defines the number of workers that is working full-time on each day
 		IntVar[] reqEmpl = new IntVar[7];
 		for(int i = 0; i < 7; i++){
-			reqEmpl[i] = new IntVar(store, "work-part-time-" + days[i], requiredEmployees[i], 50);
+			reqEmpl[i] = new IntVar(store, "work-part-time-" + days[i], requiredEmployees[i], 25);
 		}
 		
 		//All variables in an array to send in to the search
