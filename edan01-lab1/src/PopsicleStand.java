@@ -45,8 +45,14 @@ public class PopsicleStand {
 			worksFullTime[i] = new IntVar(store, "work-part-time-" + days[i], 0, requiredEmployees[i]);
 		}
 		
+		//Defines the number of workers that is working full-time on each day
+		IntVar[] reqEmpl = new IntVar[7];
+		for(int i = 0; i < 7; i++){
+			reqEmpl[i] = new IntVar(store, "work-part-time-" + days[i], requiredEmployees[i], 50);
+		}
+		
 		//All variables in an array to send in to the search
-		IntVar[] allVars = new IntVar[28];
+		IntVar[] allVars = new IntVar[35];
 		for(int i = 0;i < 7; i++){
 			allVars[i] = startsPartTime[i];
 		}
@@ -59,6 +65,9 @@ public class PopsicleStand {
 		for(int i = 0;i < 7; i++){
 			allVars[21+i] = worksFullTime[i];
 		}
+		for(int i = 0;i < 7; i++){
+			allVars[28+i] = reqEmpl[i];
+		}
 		
 		
 		for(int i = 0; i < 7; i++){
@@ -70,7 +79,7 @@ public class PopsicleStand {
 		}
 		
 		for(int i = 0; i < 7; i++){
-			store.impose(new XplusYeqC(worksPartTime[i],worksFullTime[i],requiredEmployees[i]));
+			store.impose(new Sum( new IntVar[] {worksPartTime[i],worksFullTime[i]},reqEmpl[i]));
 		}
 		
 		IntVar costFullTime = new IntVar(store,"CostFullTime",0,10000);
