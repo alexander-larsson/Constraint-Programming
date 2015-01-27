@@ -20,76 +20,43 @@ public class PopsicleStand {
 		
 		IntVar costVar = new IntVar(store, "Cost",0,10000);
 
+		//All variables in an array to send in to the search
+		IntVar[] allVars = new IntVar[21];
+		
 		//Defines the number of workers that starts working part-time on each day
 		IntVar[] startsPartTime = new IntVar[7];
 		for(int i = 0; i < 7; i++){
 			startsPartTime[i] = new IntVar(store, "start-part-time-" + days[i], 0, 25);
+			allVars[i] = startsPartTime[i];
 		}
 		
 		//Defines the number of workers that starts working full-time on each day
 		IntVar[] startsFullTime = new IntVar[7];
 		for(int i = 0; i < 7; i++){
 			startsFullTime[i] = new IntVar(store, "start-full-time-" + days[i], 0, 25);
-		}
-		
-		
-		//Defines the number of workers that is working part-time on each day
-		IntVar[] worksPartTime = new IntVar[7];
-		for(int i = 0; i < 7; i++){
-			worksPartTime[i] = new IntVar(store, "work-part-time-" + days[i], 0, 25);
-		}
-		
-		//Defines the number of workers that is working full-time on each day
-		IntVar[] worksFullTime = new IntVar[7];
-		for(int i = 0; i < 7; i++){
-			worksFullTime[i] = new IntVar(store, "work-part-time-" + days[i], 0, 25);
-		}
-		
-		//Defines the number of workers that is working full-time on each day
-		IntVar[] reqEmpl = new IntVar[7];
-		for(int i = 0; i < 7; i++){
-			reqEmpl[i] = new IntVar(store, "work-part-time-" + days[i], requiredEmployees[i], 25);
-		}
-		
-		//All variables in an array to send in to the search
-		IntVar[] allVars = new IntVar[35];
-		for(int i = 0;i < 7; i++){
-			allVars[i] = startsPartTime[i];
-		}
-		for(int i = 0;i < 7; i++){
 			allVars[7+i] = startsFullTime[i];
 		}
-		for(int i = 0;i < 7; i++){
-			allVars[14+i] = worksPartTime[i];
-		}
-		for(int i = 0;i < 7; i++){
-			allVars[21+i] = worksFullTime[i];
-		}
-		for(int i = 0;i < 7; i++){
-			allVars[28+i] = reqEmpl[i];
+		
+		//Defines the number of workers that is  required to work each day
+		IntVar[] reqEmpl = new IntVar[7];
+		for(int i = 0; i < 7; i++){
+			reqEmpl[i] = new IntVar(store, "required-" + days[i], requiredEmployees[i], 25);
+			allVars[14+i] = reqEmpl[i];
 		}
 		
 		
 		for(int i = 0; i < 7; i++){
-			store.impose(new Sum(new IntVar[] {startsPartTime[i],startsPartTime[(i+1)%7]},worksPartTime[(i+1)%7]));
-		}
-		
-		for(int i = 0; i < 7; i++){
-			store.impose(new Sum(new IntVar[] {startsFullTime[i],startsFullTime[(i+1)%7],startsFullTime[(i+2)%7],startsFullTime[(i+3)%7],startsFullTime[(i+4)%7]},worksFullTime[(i+4)%7]));
-		}
-		
-		for(int i = 0; i < 7; i++){
-			store.impose(new Sum( new IntVar[] {worksPartTime[i],worksFullTime[i]},reqEmpl[i]));
+			store.impose(new Sum(new IntVar[] {startsFullTime[i],startsFullTime[(i+1)%7],startsFullTime[(i+2)%7],startsFullTime[(i+3)%7],startsPartTime[(i+3)%7],startsFullTime[(i+4)%7],startsPartTime[(i+4)%7]},reqEmpl[(i+4)%7]));
 		}
 		
 		IntVar costFullTime = new IntVar(store,"CostFullTime",0,10000);
-		int[] fullWeights = {100,100,100,100,100,100,100};
-		Constraint fullTimeConstraint = new SumWeight(worksFullTime,fullWeights,costFullTime);
+		int[] fullWeights = {500,500,500,500,500,500,500};
+		Constraint fullTimeConstraint = new SumWeight(startsFullTime,fullWeights,costFullTime);
 		store.impose(fullTimeConstraint);
 		
 		IntVar costPartTime = new IntVar(store,"CostPartTime",0,10000);
-		int[] partWeights = {150,150,150,150,150,150,150};
-		Constraint partTimeConstraint = new SumWeight(worksPartTime,partWeights,costPartTime);
+		int[] partWeights = {300,300,300,300,300,300,300};
+		Constraint partTimeConstraint = new SumWeight(startsPartTime,partWeights,costPartTime);
 		store.impose(partTimeConstraint);
 		
 		Constraint costConstraint = new XplusYeqZ(costFullTime,costPartTime,costVar);
