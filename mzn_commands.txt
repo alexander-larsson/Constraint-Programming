@@ -1,0 +1,17 @@
+=================================
+Fix path ans stuff:
+
+initcs
+=================================
+Compile to fzn:
+
+mzn2fzn -G jacop aust.mzn
+=================================
+Normal run:
+
+fzn-jacop -s aust.fzn
+=================================
+Run with show
+
+fzn-jacop -s aust.fzn | solns2out aust.ozn
+
