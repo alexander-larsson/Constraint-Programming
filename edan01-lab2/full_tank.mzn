@@ -11,22 +11,21 @@ int: end;
 array[1..N] of var 1..N: cities;
 
 constraint cities[start] in edges[start];
-constraint forall(i in 2..(N-1)) (cities[i] in (edges[i] union {i}));
+constraint forall(i in (1..N diff {start,end})) (cities[i] in (edges[i] union {i}));
 constraint cities[end] in (edges[end] union {start});
 
 array[1..N] of var 0..tank_capacity: tankIn;
 array[1..N] of var 0..tank_capacity: fuelBought;
 array[1..N] of var 0..tank_capacity: tankOut;
-constraint tankIn[1] = 0;
+constraint tankIn[start] = 0;
 var int: cost = sum (i in 1..N) (fuelBought[i] * price[i]);
 
 constraint forall(i in 1..N)(tankOut[i] = tankIn[i]+fuelBought[i]);
-constraint forall(i in 1..N)(tankOut[i] >= distance[i,cities[i]]);
 constraint forall(i in 1..N)(tankIn[cities[i]] = tankOut[i] - distance[i,cities[i]]);
 
 constraint subcircuit(cities);
 
 solve :: int_search(cities, input_order, indomain_min, complete) minimize cost;
 
-output [show("Cost: "), show(cost), show("\nCities: "), show(cities)];
+output [show("Cost: "), show(cost), show("\nCities: "), show(cities), show("\nFuel Bought: "), show(fuelBought)];
 
