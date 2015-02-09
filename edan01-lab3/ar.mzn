@@ -44,11 +44,18 @@ array[1..length(mul)] of var {1}: resource_requirements_mul;
 constraint cumulative(start_time_add, duration_add, resource_requirements_add, number_add);
 constraint cumulative(start_time_mul, duration_mul, resource_requirements_mul, number_mul);
 
+%===================DIFF 2 constraints och variabler======================
+
 %array[1..length(add)] of var {1}: limit_add;
 %array[1..length(mul)] of var {1}: limit_mul;
 
-%constraint diff2(start_time_add,duration_add,diff_res_add,limit_add);
-%constraint diff2(start_time_mul,duration_mul,diff_res_add,limit_mul);
+%array[1..length(add)] of var 1..number_add : add_resource;
+%array[1..length(mul)] of var 1..number_mul : mul_resource;
+
+%constraint diff2(start_time_add,add_resource,duration_add,limit_add);
+%constraint diff2(start_time_mul,mul_resource,duration_mul,limit_mul);
+
+%========================================================================
 
 var int: cycles = max([start_time[i] + bool2int(i in add)*del_add + bool2int(i in mul)*del_mul | i in last]);
 
