@@ -209,13 +209,20 @@ public class SimpleDFS  {
 	 */ 
 	IntVar selectVariable(IntVar[] v) {
 	    if (v.length != 0) {
-
+	    	
+	    IntVar currentSmallest = v[0];	
 		searchVariables = new IntVar[v.length-1];
-		for (int i = 0; i < v.length-1; i++) {
-		    searchVariables[i] = v[i+1]; 
+		
+		for (int i = 1; i < v.length; i++) {
+			if(v[i].domain.getSize() < currentSmallest.domain.getSize()) {
+				searchVariables[i-1] = currentSmallest;
+				currentSmallest = v[i];
+			} else {
+				searchVariables[i-1] = v[i];
+			}
 		}
 
-		return v[0];
+		return currentSmallest;
 
 	    }
 	    else {
@@ -228,7 +235,7 @@ public class SimpleDFS  {
 	 * example value selection; indomain_min
 	 */ 
 	int selectValue(IntVar v) {
-	    return v.min();
+	    return v.max();
 	}
 
 	/**
